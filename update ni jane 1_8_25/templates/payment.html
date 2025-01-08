@@ -1,0 +1,103 @@
+{% extends 'dashboard.html' %}
+
+{% block title %}Payment{% endblock %}
+
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/payment.css') }}">
+{% endblock %}
+
+{% block js %}
+    <script src="{{ url_for('static', filename='java/payment.js') }}"></script>
+{% endblock %}
+
+
+{% block content %}
+<div class="payment-content">
+    <div class="payment-header">
+        <h1>Payment</h1>
+    </div>
+    <div class="payment-container">
+        <!-- Order Summary -->
+        <div class="order-summary">
+            <h2>Order ID</h2>
+            <div class="order-info">
+                <p>{{ order_date or 'August 16, 2024' }}</p>
+                <p>{{ order_type or 'Order Type' }}</p>
+            </div>
+            <hr class="order-info-separator">
+            <hr>
+            <div class="order-totals">
+                <div class="subtotal">
+                    <p>Subtotal</p>
+                    <p>₱{{ subtotal or '0.00' }}</p>
+                </div>
+                <div class="tax">
+                    <p>Tax 5%</p>
+                    <p>₱{{ tax or '0.00' }}</p>
+                </div>
+                <div class="total">
+                    <p>Total Amount</p>
+                    <p>₱{{ total or '0.00' }}</p>
+                </div>
+            </div>
+            <div class="payment-summary">
+                <p>Cash <span class="amount">₱{{ cash or '0.00' }}</span></p>
+                <p>Change <span class="amount">₱{{ change or '0.00' }}</span></p>
+            </div>
+            <button class="confirm-btn">
+                <i class="fas fa-wallet"></i> Confirm Payment
+            </button>
+        </div>
+
+        <!-- Summary Container -->
+        <div class="summary-container">
+            <!-- Discount Summary -->
+            <div class="discount-summary">
+                <div class="discount-header">
+                    <h2>Discount</h2>
+                    <div class="tabs">
+                        <button class="tab-btn active">Senior</button>
+                        <button class="tab-btn">PWD</button>
+                    </div>
+                </div>
+                <div class="input-fields">
+                    <input type="text" placeholder="Enter Name">
+                    <input type="text" placeholder="Enter Account Number">
+                </div>
+                <div class="discount-actions">
+                    <button class="cancel-btn">Cancel</button>
+                    <button class="apply-btn">Apply</button>
+                </div>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="payment-method">
+                <h2>Payment Method</h2>
+                <div class="tabs">
+                    <button class="tab-btn active">Cash</button>
+                    <button class="tab-btn">Other Modes</button>
+                </div>
+                <div class="payment-input">
+                    <input type="text" placeholder="Enter amount" value="₱{{ default_amount or '480.00' }}">
+                </div>
+                <div class="payment-actions">
+                    <button class="cancel-btn">Cancel</button>
+                    <button class="add-btn">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Payment Modal -->
+<div class="modal" id="paymentModal" style="display: none;">
+    <div class="modal-content">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <p><h2>Payment Successful!</h2></p>
+        <button id="closeModalButton" class="done-btn">Print Official Receipt</button>
+    </div>
+</div>
+{% endblock %}
