@@ -1,0 +1,135 @@
+{% extends 'dashboard.html' %}
+
+{% block title %}Payment{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/payment.css') }}">
+{% endblock %}
+
+{% block js %}
+<script src="{{ url_for('static', filename='java/payment.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="payment-content">
+    <div class="payment-header">
+        <h1>Payment</h1>
+    </div>
+    <div class="payment-container">
+        <!-- Order Summary -->
+        <div class="order-summary">
+            <div class="order-id-row">
+                <span>Order ID</span>
+                <span class="order-id-value">{{ order_id or 'Order ID Not Available' }}</span>
+            </div>
+            <div class="order-info">
+                <p>{{ order_date or 'Date Not Available' }}</p>
+                <p>{{ order_type or 'Order Type Not Available' }}</p>
+            </div>
+            <hr class="order-info-separator">
+            <div class="order-totals">
+                <div class="subtotal">
+                    <p>Subtotal</p>
+                    <p>₱{{ subtotal or '0.00' }}</p>
+                </div>
+                <div class="vat-sales">
+                    <p>VAT Sales</p>
+                    <p>₱{{ "%.2f"|format(subtotal / 1.12) if subtotal else '0.00' }}</p>
+                </div>
+                <div class="vat-amount">
+                    <p>12% VAT</p>
+                    <p>₱{{ "%.2f"|format(subtotal - (subtotal / 1.12)) if subtotal else '0.00' }}</p>
+                </div>
+                <!-- Discount Section -->
+                <div class="discount-section" style="display: none;">
+                    <div class="discount-line">
+                        <span id="discount-type">Discount Type: </span>
+                        <span id="discount-amount">0%</span>
+                    </div>
+                </div>
+                <div class="total">
+                    <p>Total Amount</p>
+                    <p id="total-amount">₱{{ subtotal or '0.00' }}</p>
+                </div>
+            </div>
+
+            <div class="payment-summary">
+                <div class="payment-row">
+                    <p class="label">Cash:</p>
+                    <p id="cash-display">₱0.00</p>
+                </div>
+                <div class="payment-row">
+                    <p class="label">Change:</p>
+                    <p id="change-amount">₱0.00</p>
+                </div>
+            </div>
+
+            <button class="confirm-btn">
+                <i class="fas fa-wallet"></i> Confirm Payment
+            </button>
+        </div>
+
+        <!-- Summary Container -->
+        <div class="summary-container">
+            <!-- Discount Summary -->
+            <div class="discount-summary">
+                <div class="discount-header">
+                    <h2>Discount</h2>
+                    <div class="tabs">
+                        <button class="tab-btn active" id="senior-btn">Senior</button>
+                        <button class="tab-btn" id="pwd-btn">PWD</button>
+                    </div>
+                </div>
+                <div class="input-fields">
+                    <input type="text" placeholder="Enter Name">
+                    <input type="text" placeholder="Enter Account Number">
+                </div>
+                <div class="discount-actions">
+                    <button class="cancel-btn">Cancel</button>
+                    <button class="apply-btn">Apply</button>
+                </div>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="payment-method">
+                <h2>Payment Method</h2>
+                <div class="tabs">
+                    <button class="tab-btn active">Cash</button>
+                </div>
+                <div class="payment-input">
+                    <input type="text" id="cash-input" placeholder="Enter Cash" />
+                </div>
+                <div class="payment-actions">
+                    <button class="cancel-btn">Cancel</button>
+                    <button class="add-btn">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Payment Modal -->
+<div class="modal" id="paymentModal" style="display: none;">
+    <div class="modal-content">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <p><h2>Payment Successful!</h2></p>
+        <button id="closeModalButton" class="done-btn">Print Official Receipt</button>
+    </div>
+</div>
+
+<!-- Modal for Printing Receipt -->
+<div class="print-receipt-modal" id="printReceiptModal" style="display: none;">
+    <div class="modal-content">
+        <div class="icon">
+            <i class="fas fa-receipt"></i> <!-- Enlarged receipt icon -->
+        </div>
+        <p class="message">Printing Receipt...</p>
+        <button id="modalCloseButton" class="done-btn">Done</button>
+    </div>
+</div>
+
+
+{% endblock %}
